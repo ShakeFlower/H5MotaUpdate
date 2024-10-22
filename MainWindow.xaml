@@ -1,0 +1,28 @@
+﻿<Window x:Class="H5MotaUpdate.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:H5MotaUpdate"
+        xmlns:vm="clr-namespace:H5MotaUpdate.ViewModels"
+        mc:Ignorable="d"
+        Title="H5魔塔翻新器" Height="450" Width="800" Background="#F0F0F0">
+    <Window.DataContext>
+        <vm:MainViewModel></vm:MainViewModel>
+    </Window.DataContext>
+    <Canvas>
+        <TextBlock FontSize ="16" Height="20" Canvas.Left="10" Text="旧塔文件夹" Canvas.Top="15" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBlock FontSize ="16" Height="20" Canvas.Left="10" Text="新样板文件夹" Canvas.Top="50" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <TextBlock FontSize ="16" Height="20" Canvas.Left="10" Text="旧塔版本号" Canvas.Top="85" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+        <TextBlock Name ="InputFolderPath" FontSize ="14" Height="40" Canvas.Left="140"  Canvas.Top="15" Width="500" TextWrapping ="Wrap" Text="{Binding SourceRootDirectory}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock Name ="OutputFolderPath" FontSize ="14" Height="40" Canvas.Left="140"  Canvas.Top="50" Width="500" TextWrapping ="Wrap" Text="{Binding DestRootDirectory}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock FontSize ="16" Height="20" Canvas.Left="140" Text="{Binding VersionString}" Canvas.Top="85" Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+        <Button Name ="BrowseSourceFolderButton" FontSize ="16" Content="浏览" Canvas.Left="680" Canvas.Top="10" Width="40" Command="{Binding SelectSourceCommand}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button x:Name ="BrowseDestFolderButton" FontSize ="16" Content="浏览" Canvas.Left="680" Canvas.Top="47" Width="40" Command="{Binding SelectDestCommand}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Button FontSize ="16" Content="开始迁移" Canvas.Left="30" Canvas.Top="127" Width="140" Command="{Binding MigrateCommand}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <TextBlock FontSize ="16" Canvas.Left="50" Canvas.Top="220" Width="700" TextWrapping="Wrap" Text="本工具用于辅助迁移塔的地图、元件等数据，不保证结果的正确性，请仔细手动核对结果，并注意备份原工程。&#x000A;本工具不能迁移公共事件，插件和脚本，建议您手动逐个迁移。 &#x000A;同理，道具，敌人，地图等地方的事件和脚本很可能无法使用，请仔细核对。 &#x000A;部分事件块迁移后不能被新编辑器识别，会显示为自定义事件(如AddValue等)，但不一定失效，请根据具体情况决定是否改写。&#x000A;使用本工具复刻产生少量错误属于正常现象，自行修正即可，有严重bug（不能打开编辑器等）请根据控制台报错修正相应文件格式，或联系工具作者。"/>
+        <CheckBox Name ="MigrateConfig" Content="迁移配置表格" Height="26" Canvas.Left="200" Canvas.Top="130" Width="100" IsChecked="{Binding MigrateServerTable}"/>
+    </Canvas>
+</Window>
