@@ -154,10 +154,17 @@ namespace H5MotaUpdate.ViewModels
                     if (onePoint == 167 && version.CompareTo(new Version(2, 6)) < 0)
                     {
                         // 2.6以后，滑冰转移到背景层
-                        JArray bgMatrix = (JArray)jsonObject["bgmap"].DeepClone();
-                        if (bgMatrix == null || bgMatrix.Count == 0)
+                        if (jsonObject["bgmap"] == null)
                         {
                             jsonObject["bgmap"] = zeroBgMatrix.DeepClone();
+                        }
+                        else
+                        {
+                            JArray bgMatrix = (JArray)jsonObject["bgmap"];
+                            if (bgMatrix.Count == 0)
+                            {
+                                jsonObject["bgmap"] = zeroBgMatrix.DeepClone();
+                            }
                         }
                         jsonObject["bgmap"][i][j] = 167;
                         mapMatrix[i][j] = 0;

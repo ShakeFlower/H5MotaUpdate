@@ -159,7 +159,14 @@ namespace H5MotaUpdate.ViewModels
                 heroItemData = (JObject)heroData["items"];
             heroData["image"] = "hero.png";
             heroData["followers"] = new JArray();
-            if (heroData["exp"] == null) heroData["exp"] = heroData["experience"];
+            if (heroData["exp"] == null)
+            {
+                heroData["exp"] = heroData["experience"];
+            }
+            if (heroData["equipment"] == null)
+            {
+                heroData["equipment"] = new JArray(); // 预防某些超级老样板没有hero.equipment}
+            }
             heroData.Remove("experience");
 
             JObject heroToolsData = (JObject)heroItemData["tools"];
@@ -299,13 +306,12 @@ namespace H5MotaUpdate.ViewModels
                     {
                         statusBarItemsArr.Add(status);
                     }
-                    else if (new string[] { "enableHP", "enableAtk", "enableDef" }.Contains(status))  // hp,atk,def为2.7前默认显示的变量，必须显示
-
-                    {
+                    else if (new string[] { "enableHP", "enableAtk", "enableDef" }.Contains(status))
+                    {// hp,atk,def为2.7前默认显示的变量，必须显示
                         statusBarItemsArr.Add(status);
                     }
-                    else if (status == "enableExp" && flagsData["enableExperience"].Value<bool>() == true)  // experience更新为exp
-                    {
+                    else if (status == "enableExp" && flagsData["enableExperience"].Value<bool>() == true)
+                    {// experience更新为exp
                         statusBarItemsArr.Add(status);
                     }
                 }

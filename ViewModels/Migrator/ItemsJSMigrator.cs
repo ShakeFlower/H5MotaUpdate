@@ -92,6 +92,10 @@ namespace H5MotaUpdate.ViewModels
                     if (newItemDatas.ContainsKey(key))
                     {
                         JObject itemData = (JObject)newItemDatas[key];
+                        if (ele== "itemEffectTip")
+                        {
+                            valueString = "${" + valueString + "}";
+                        }
                         itemData[ele] = valueString;
                     }
                 }
