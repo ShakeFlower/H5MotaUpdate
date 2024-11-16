@@ -37,11 +37,11 @@ namespace H5MotaUpdate.ViewModels
                     this.mapsIndexArray = mapsIndexArray;
                     MigrateFloors();
                 }
-                MessageBox.Show("迁移project/" + FILENAME + "文件夹完成。");
+                ErrorLogger.LogError("迁移project/" + FILENAME + "文件夹完成。");
             }
             catch (Exception e)
             {
-                MessageBox.Show("迁移project/" + FILENAME + $"文件夹过程中出现错误: {e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError("迁移project/" + FILENAME + $"文件夹过程中出现错误: {e.Message}", "red");
             }
         }
 
@@ -79,7 +79,7 @@ namespace H5MotaUpdate.ViewModels
             }
             catch (Exception e)
             {
-                MessageBox.Show("迁移楼层文件" + System.IO.Path.GetFileName(sourceFilePath) + $"时出现错误: {e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError("迁移楼层文件" + System.IO.Path.GetFileName(sourceFilePath) + $"时出现错误: {e.Message}", "red");
             }
         }
 

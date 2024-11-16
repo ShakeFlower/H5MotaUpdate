@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 
 namespace H5MotaUpdate.ViewModels
 {
@@ -13,13 +14,17 @@ namespace H5MotaUpdate.ViewModels
             {
                 if (!Directory.Exists(folderPath))
                 {
-                    MessageBox.Show(folderName + "文件夹不存在，请检查", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    string errMsg = folderName + "文件夹不存在，请检查";
+                    MessageBox.Show(errMsg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    ErrorLogger.LogError(errMsg, "red");
                     return false;
                 }
             }
-            catch (Exception e)
+            catch
             {
-                MessageBox.Show(folderName + $"文件夹不存在，请检查，错误:{e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                string errMsg = folderName + "文件夹不存在，请检查";
+                MessageBox.Show(errMsg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError(errMsg, "red");
                 return false;
             }
             return true;
@@ -46,12 +51,16 @@ namespace H5MotaUpdate.ViewModels
             try { Directory.CreateDirectory(folderDirectory); }
             catch (Exception e)
             {
-                MessageBox.Show($"错误：{e.Message},目标文件夹不存在" + folderName + "子文件夹，且创建失败，请检查", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                string errMsg = $"错误：{e.Message},目标文件夹不存在" + folderName + "子文件夹，且创建失败，请检查";
+                MessageBox.Show(errMsg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError(errMsg, "red");
                 return false;
             }
             if (!Directory.Exists(folderDirectory))
             {
-                MessageBox.Show("目标文件夹不存在" + folderName + "子文件夹，且创建失败，请检查", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                string errMsg = "目标文件夹不存在" + folderName + "子文件夹，且创建失败，请检查";
+                MessageBox.Show(errMsg, "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError(errMsg, "red");
                 return false;
             }
             return true;
@@ -72,7 +81,7 @@ namespace H5MotaUpdate.ViewModels
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("迁移" + file + $"过程中出现错误：{e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    ErrorLogger.LogError("迁移" + file + $"过程中出现错误：{e.Message}", "red");
                 }
             }
         }
@@ -92,7 +101,7 @@ namespace H5MotaUpdate.ViewModels
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("迁移" + file + $"过程中出现错误：{e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    ErrorLogger.LogError("迁移" + file + $"过程中出现错误：{e.Message}", "red");
                 }
             }
 
@@ -106,7 +115,7 @@ namespace H5MotaUpdate.ViewModels
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("迁移" + dir + $"过程中出现错误：{e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    ErrorLogger.LogError("迁移" + dir + $"过程中出现错误：{e.Message}", "red");
                 }
             }
         }
@@ -123,16 +132,16 @@ namespace H5MotaUpdate.ViewModels
 
                 if (!File.Exists(SourcePath))
                 {
-                    MessageBox.Show("源文件夹不存在" + fileName + "子文件，请检查", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    ErrorLogger.LogError("源文件夹不存在" + fileName + "子文件，请检查", "red");
                 }
                 else
                 {
-                    System.IO.File.Copy(SourcePath, DestPath, true);
+                    File.Copy(SourcePath, DestPath, true);
                 }
             }
             catch (Exception e)
             {
-                MessageBox.Show("迁移" + fileName + $"文件出现错误：{e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError("迁移" + fileName + $"文件出现错误：{e.Message}", "red");
             }
         }
 
@@ -141,7 +150,28 @@ namespace H5MotaUpdate.ViewModels
         /// </summary>
         public static void ShowHelp()
         {
+            try
+            {
+                string appDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                string readMePath = Path.Combine(appDirectory, "readme.txt");
 
+                if (File.Exists(readMePath))
+                {
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = readMePath,
+                        UseShellExecute = true
+                    });
+                }
+                else
+                {
+                    MessageBox.Show("readme.txt 不存在", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"无法打开readme.txt，发生了错误: {ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
     }
 }

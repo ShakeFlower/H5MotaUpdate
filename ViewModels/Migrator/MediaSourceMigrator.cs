@@ -30,11 +30,11 @@ namespace H5MotaUpdate.ViewModels
                 {
                     Convert();
                 }
-                MessageBox.Show("迁移素材文件完成。");
+                ErrorLogger.LogError("迁移素材文件完成。");
             }
             catch (Exception e)
             {
-                MessageBox.Show("迁移素材文件过程中出现错误: " + $"{e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError("迁移素材文件过程中出现错误: " + $"{e.Message}", "red");
             }
         }
 
@@ -48,11 +48,11 @@ namespace H5MotaUpdate.ViewModels
                     string sourcePath = Path.Combine(oldProjectDirectory, folderName),
                         destPath = Path.Combine(newProjectDirectory, folderName);
                     FileUtils.CopyFolderContents(sourcePath, destPath);
-                    MessageBox.Show("project/" + folderName + "文件夹迁移完成");
+                    ErrorLogger.LogError("project/" + folderName + "文件夹迁移完成");
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("project/" + folderName + $"文件夹迁移失败，原因:{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    ErrorLogger.LogError("project/" + folderName + $"文件夹迁移失败，原因:{ex.Message}", "red");
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace H5MotaUpdate.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"素材文件夹迁移出错，原因:{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError($"素材文件夹迁移出错，原因:{ex.Message}", "red");
             }
         }
 
@@ -112,11 +112,11 @@ namespace H5MotaUpdate.ViewModels
                 string inputDirectory = Path.Combine(oldProjectDirectory, "animates"),
                     outputDirectory = Path.Combine(newProjectDirectory, "animates");
                 FileUtils.CopyFolderContents(inputDirectory, outputDirectory);
-                MessageBox.Show("project/animates文件夹迁移完成");
+                ErrorLogger.LogError("project/animates文件夹迁移完成");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"project/animates文件夹迁移出错，原因:{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError($"project/animates文件夹迁移出错，原因:{ex.Message}", "red");
             }
         }
 
@@ -151,6 +151,7 @@ namespace H5MotaUpdate.ViewModels
                             int height = image.Height;
                             if (height < 1120)
                             {
+                                ErrorLogger.LogError("警告：原塔的icons.png长度不足！请对照最新样板使用PS工具补齐数字键和Alt图标等。", "red");
                                 MessageBox.Show("警告：原塔的icons.png长度不足！请对照最新样板使用PS工具补齐数字键和Alt图标等。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                             }
                         }
@@ -173,11 +174,11 @@ namespace H5MotaUpdate.ViewModels
                         File.Copy(filePath, Path.Combine(newProjectDirectory, "tilesets/" + fileName), true);
                     }
                 }
-                MessageBox.Show("project/images文件夹迁移完成");
+                ErrorLogger.LogError("project/images文件夹迁移完成");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"project/images文件夹迁移出错，原因:{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError($"project/images文件夹迁移出错，原因:{ex.Message}", "red");
             }
         }
 
@@ -200,11 +201,11 @@ namespace H5MotaUpdate.ViewModels
                         File.Copy(filePath, Path.Combine(newProjectDirectory, "sounds/" + fileName), true);
                     }
                 }
-                MessageBox.Show("project/sounds文件夹迁移完成");
+                ErrorLogger.LogError("project/sounds文件夹迁移完成");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"project/sounds文件夹迁移出错，原因:{ex.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError($"project/sounds文件夹迁移出错，原因:{ex.Message}", "red");
             }
         }
     }

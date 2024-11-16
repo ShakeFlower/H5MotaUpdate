@@ -42,11 +42,11 @@ namespace H5MotaUpdate.ViewModels
                     newJsContent.Append(jsonObject.ToString());
                     File.WriteAllText(destPath, newJsContent.ToString());
                 }
-                MessageBox.Show("迁移project/" + FILENAME + "文件完成。");
+                ErrorLogger.LogError("迁移project/" + FILENAME + "文件完成。");
             }
             catch (Exception e)
             {
-                MessageBox.Show("迁移project/" + FILENAME + $"过程中出现错误: {e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError("迁移project/" + FILENAME + $"过程中出现错误: {e.Message}", "red");
             }
         }
 
@@ -126,7 +126,7 @@ namespace H5MotaUpdate.ViewModels
                 }
                 if (i == 9999)
                 {
-                    MessageBox.Show("警告！Maps.js中存在过多元素！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    ErrorLogger.LogError("警告！Maps.js中存在过多元素！可能引起一些未知问题。", "red");
                 }
             }
 
@@ -146,24 +146,31 @@ namespace H5MotaUpdate.ViewModels
 
             foreach (JProperty prop in jsonObject.Properties())
             {
-                JObject propObj = (JObject)prop.Value;
+                if (prop.Value is JObject propObj)
+                {
+                    JToken noPass = propObj["noPass"];
 
-                JToken noPass = propObj["noPass"];
-                if (noPass != null && noPass.ToString() == "True")
-                {
-                    propObj["canPass"] = false;
-                }
-                if (noPass != null && noPass.ToString() == "False")
-                {
-                    propObj["canPass"] = true;
-                }
-                propObj.Remove("noPass");
+                    if (noPass != null && noPass.Value<bool>())
+                    {
+                        propObj["canPass"] = false;
+                    }
+                    else if (noPass != null && !noPass.Value<bool>())
+                    {
+                        propObj["canPass"] = true;
+                    }
 
-                // 原先id存在的icons直接查找替换
-                string iconId = propObj["id"].ToString();
-                if (dictionary.ContainsKey(iconId))
-                {
-                    propObj = StringUtils.MergeJObjects(propObj, dictionary[iconId]);
+                    // 移除 noPass 属性
+                    propObj.Remove("noPass");
+
+                    string iconId = propObj["id"]?.ToString();
+                    if (!string.IsNullOrEmpty(iconId) && dictionary.ContainsKey(iconId))
+                    {
+                        prop.Value = StringUtils.MergeJObjects(propObj, dictionary[iconId]);
+                    }
+                    else
+                    {
+                        prop.Value = propObj;
+                    }
                 }
             }
 

@@ -12,8 +12,8 @@ namespace H5MotaUpdate.ViewModels
             DATANAME = "data_a1e2fb4a_e986_4524_b0da_9b7ba7c0874d";
         public DataJSMigrator(string oldProjectDirectory, string newProjectDirectory, Version ver)
         {
-            sourcePath = System.IO.Path.Combine(oldProjectDirectory, FILENAME);
-            destPath = System.IO.Path.Combine(newProjectDirectory, FILENAME);
+            sourcePath = Path.Combine(oldProjectDirectory, FILENAME);
+            destPath = Path.Combine(newProjectDirectory, FILENAME);
             this.version = ver;
         }
 
@@ -37,11 +37,11 @@ namespace H5MotaUpdate.ViewModels
                     newJsContent.Append(jsonObject.ToString());
                     File.WriteAllText(destPath, newJsContent.ToString());
                 }
-                MessageBox.Show("迁移project/" + FILENAME + "文件完成。");
+                ErrorLogger.LogError("迁移project/" + FILENAME + "文件完成。");
             }
             catch (Exception e)
             {
-                MessageBox.Show("迁移project/" + FILENAME + $"过程中出现错误: {e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError("迁移project/" + FILENAME + $"过程中出现错误: {e.Message}", "red");
             }
         }
 
@@ -61,12 +61,16 @@ namespace H5MotaUpdate.ViewModels
             JArray tilesetArr = (JArray)mainData["tilesets"];
             if (tilesetArr != null && tilesetArr.Count > 0) // 2.4.2(?)之前不存在main.tilesets
             {
-                foreach (JToken tileset in tilesetArr)
+                for (int i = 0; i < tilesetArr.Count; i++)
                 {
-                    string tilesetStr = tileset.ToString();
-                    if (tilesetStr.Contains('.'))
+                    JToken tileset = tilesetArr[i];
+                    if (tileset.Type == JTokenType.String)
                     {
-                        tilesetStr += ".png";
+                        string tilesetStr = (string)tileset;
+                        if (!tilesetStr.Contains('.'))
+                        {
+                            tilesetArr[i] = tilesetStr + ".png";
+                        }
                     }
                 }
             }
@@ -160,12 +164,11 @@ namespace H5MotaUpdate.ViewModels
                 {
                     heroToolsData = new JObject();
                 }
-                StringUtils.MergeJObjects(heroToolsData, heroKeysData);
+                heroItemData["tools"] = StringUtils.MergeJObjects(heroToolsData, heroKeysData);
             }
             heroItemData.Remove("keys");
 
-
-            #region
+            #region 全局商店转换
             // 转换全局商店shop的格式
             JArray shopArr = (JArray)firstData["shops"];
             for (int i = 0; i < shopArr.Count; i++)
@@ -187,11 +190,9 @@ namespace H5MotaUpdate.ViewModels
                         shopNeed = shop["need"].ToString(),
                         shopText = shop["text"].ToString(),
                         shopId = shop["id"].ToString(),
-                        flagName_Time = "flag:" + shopId + "_times", // 新设的购买次数变量flag:xxx
-                        flagName_Price = "flag:" + shopId + "_price"; // 新设的价格变量flag:xxx
-                    string priceStr = shopNeed.Replace("times", flagName_Time); //用新变量名取代times之后的商店价格字符串
+                        flagName_Time = "flag:" + shopId + "_times"; // 新设的购买次数变量flag:xxx
+                    string priceStr = shopNeed.Replace("times", flagName_Time); //商店价格字符串，用新变量名取代times
                     shop["text"] = StringUtils.ReplaceInBetweenCurlyBraces(shopText, "times", flagName_Time);
-                    shop["text"] = StringUtils.ReplaceInBetweenCurlyBraces(shopText, "need", flagName_Price);
                     shop["disablePreview"] = false;
 
                     if (use == "experience")
@@ -206,7 +207,7 @@ namespace H5MotaUpdate.ViewModels
                         string? choiceNeed = null;
                         if (choice.ContainsKey("need"))
                         {
-                            choiceNeed = choice["need"].ToString().Replace("times", flagName_Time);
+                            choiceNeed = choice["need"].ToString().Replace("times", flagName_Time); // 单个选项的价格字符串
                             requirement = "status:" + use + ">=" + choiceNeed;
                         }
                         else
@@ -216,15 +217,14 @@ namespace H5MotaUpdate.ViewModels
                         choice["need"] = requirement; // 单个选项的使用条件
 
                         JArray newAction = new JArray();
-                        JObject setPrice = StringUtils.getAddValueJson(flagName_Price, choiceNeed != null ? choiceNeed : priceStr, "="),
-                            deductMoney = StringUtils.getAddValueJson("status:" + use, flagName_Price, "-="),
+                        JObject
+                            deductMoney = StringUtils.getAddValueJson("status:" + use, choiceNeed != null ? choiceNeed : priceStr, "-="),
                             addTime = StringUtils.getAddValueJson(flagName_Time, "1", "+=");
-                        newAction.Add(setPrice);
                         newAction.Add(deductMoney);
                         newAction.Add(addTime);
 
                         string oldEffect = choice["effect"].ToString();
-                        var newEffectJArray = StringUtils.doEffect(oldEffect);
+                        JArray newEffectJArray = StringUtils.doEffect(oldEffect);
                         newAction.Merge(newEffectJArray);
                         choice["action"] = newAction; //单个选项使用时执行的事件
                     }

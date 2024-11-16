@@ -17,11 +17,11 @@
             try
             {
                 MigrateDirect();
-                MessageBox.Show("迁移" + FILENAME + "文件夹完成。");
+                ErrorLogger.LogError("迁移" + FILENAME + "文件夹完成。");
             }
             catch (Exception e)
             {
-                MessageBox.Show("迁移" + FILENAME + $"过程中出现错误: {e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError("迁移" + FILENAME + $"过程中出现错误: {e.Message}", "red");
             }
         }
 

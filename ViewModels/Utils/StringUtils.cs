@@ -31,7 +31,7 @@ namespace H5MotaUpdate.ViewModels
             }
             catch (Exception e)
             {
-                System.Windows.Forms.MessageBox.Show("从" + path + "中读取JSON时出错:" + $"{e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError("从" + path + "中读取JSON时出错:" + $"{e.Message}", "red");
                 throw;
             }
         }
@@ -191,6 +191,7 @@ namespace H5MotaUpdate.ViewModels
             {
                 width = 13;
                 height = 13;
+                ErrorLogger.LogError("错误：未能从源文件夹的libs/core.js中读取到地图长宽数据", "red");
             }
             return (width, height);
         }
@@ -214,7 +215,7 @@ namespace H5MotaUpdate.ViewModels
             }
             catch
             {
-
+                ErrorLogger.LogError("错误：修改目标文件夹libs/core.js中的地图长宽数据失败", "red");
             }
         }
     }

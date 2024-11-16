@@ -42,11 +42,11 @@ namespace H5MotaUpdate.ViewModels
                     newJsContent.Append(jsonObject.ToString());
                     File.WriteAllText(destPath, newJsContent.ToString());
                 }
-                MessageBox.Show("迁移project/" + FILENAME + "文件完成");
+                ErrorLogger.LogError("迁移project/" + FILENAME + "文件完成");
             }
             catch (Exception e)
             {
-                MessageBox.Show("迁移project/" + FILENAME + $"过程中出现错误: {e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError("迁移project/" + FILENAME + $"过程中出现错误: {e.Message}", "red");
             }
         }
 

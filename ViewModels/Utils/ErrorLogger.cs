@@ -20,7 +20,7 @@ namespace H5MotaUpdate.ViewModels
     {
         private static ObservableCollection<ColoredString> _errorMessages = new ObservableCollection<ColoredString>();
 
-        public static ObservableCollection<ColoredString> ErrorMessages { get { return _errorMessages; } }
+        public static ObservableCollection<ColoredString> ErrorMessages => _errorMessages;
 
         public static void LogError(string error, string color)
         {
@@ -35,6 +35,11 @@ namespace H5MotaUpdate.ViewModels
                     break;
             }
 
+        }
+
+        public static void LogError(string error)
+        {
+            ErrorMessages.Add(new ColoredString(error, Brushes.Black));
         }
 
         public static void Clear()

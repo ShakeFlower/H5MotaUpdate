@@ -21,13 +21,13 @@
 
         <Button Name ="BrowseSourceFolderButton" FontSize ="16" Content="浏览" Canvas.Left="680" Canvas.Top="10" Width="40" Command="{Binding SelectSourceCommand}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <Button x:Name ="BrowseDestFolderButton" FontSize ="16" Content="浏览" Canvas.Left="680" Canvas.Top="47" Width="40" Command="{Binding SelectDestCommand}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <Button FontSize ="16" Content="开始迁移" Canvas.Left="30" Canvas.Top="127" Width="140" Command="{Binding MigrateCommand}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        <Button FontSize ="16" Content="开始迁移" Canvas.Left="30" Canvas.Top="127" Width="140" Command="{Binding MigrateCommand}" IsEnabled= "{Binding IsAvailable}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <CheckBox Name ="MigrateConfig" Content="迁移配置表格" Height="26" Canvas.Left="426" Canvas.Top="134" Width="100" IsChecked="{Binding MigrateServerTable}"/>
-        <Button FontSize ="16" Content="查看帮助" Canvas.Left="223" Canvas.Top="127" Width="140" Command="{Binding MigrateCommand}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button FontSize ="16" Content="查看帮助" Canvas.Left="223" Canvas.Top="127" Width="140" Command="{Binding HelpCommand}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         <ListBox Height="90" Canvas.Left="30" Canvas.Top="230" Width="690" ItemsSource="{Binding ErrorMessages}" HorizontalAlignment="Center" VerticalAlignment="Top">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" />
+                    <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" TextWrapping="Wrap"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

@@ -14,6 +14,7 @@ namespace H5MotaUpdate.ViewModels
         private string? _versionString;
         private string? SourceProjectDirectory, DestProjectDirectroy;
         private bool _migrateServerTable;
+        private bool _isAvailable;
 
         public string? SourceRootDirectory
         {
@@ -55,6 +56,15 @@ namespace H5MotaUpdate.ViewModels
             }
         }
 
+        public bool IsAvailable
+        {
+            get => _isAvailable;
+            set
+            {
+                _isAvailable = value;
+                OnPropertyChanged();
+            }
+        }
         public ObservableCollection<ColoredString> ErrorMessages => ErrorLogger.ErrorMessages;
 
         public ICommand SelectSourceCommand { get; set; }
@@ -64,13 +74,6 @@ namespace H5MotaUpdate.ViewModels
 
         public MainViewModel()
         {
-            ErrorLogger.LogError("111", "red");
-            ErrorLogger.LogError("222", "");
-            ErrorLogger.LogError("222", "");
-            ErrorLogger.LogError("222", "");
-            ErrorLogger.LogError("222", "");
-            ErrorLogger.LogError("222", "");
-            ErrorLogger.LogError("222", "");
             SourceRootDirectory = "请选择包含要翻新的旧塔的文件夹";
             DestRootDirectory = "请选择一个包含新的2.10.3样板的文件夹";
             VersionString = "-";
@@ -79,6 +82,7 @@ namespace H5MotaUpdate.ViewModels
             MigrateCommand = new RelayCommand(StartMigrate);
             HelpCommand = new RelayCommand(FileUtils.ShowHelp);
             MigrateServerTable = false;
+            IsAvailable = true;
         }
 
         private void SelectSourceRootFolder()
@@ -116,6 +120,7 @@ namespace H5MotaUpdate.ViewModels
             if (!VersionUtils.IsValidVersion(VersionString))
             {
                 MessageBox.Show("版本号格式不合法！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                ErrorLogger.LogError("版本号格式不合法！", "red");
                 return false;
             }
             return true;
@@ -129,10 +134,14 @@ namespace H5MotaUpdate.ViewModels
         public void StartMigrate()
         {
             if (!CheckValid()) return;
+            IsAvailable = false;
             Version ver;
             Version.TryParse(VersionString, out ver);
 
-            #region
+            ErrorLogger.Clear();
+            // 每次开始迁移，清空之前报错信息
+
+            #region 读取塔的尺寸
             // 从libs/core.js中读取塔的默认长宽，若不为13，需要写入新样板的core.js中
             int width, height;
             string sourceCoreJSPath = Path.Combine(SourceRootDirectory, "libs/core.js"),
@@ -143,7 +152,7 @@ namespace H5MotaUpdate.ViewModels
             {
                 StringUtils.WriteMapWidth(destCoreJSPath, width, height);
             }
-            #endregion
+            #endregion 
 
             DataJSMigrator dataJSMigrator = new(SourceProjectDirectory, DestProjectDirectroy, ver);
             EnemysJSMigrator enemysJSMigrator = new(SourceProjectDirectory, DestProjectDirectroy, ver);
@@ -166,7 +175,10 @@ namespace H5MotaUpdate.ViewModels
                 ServerTableMigrator serverTableJSMigrator = new(SourceRootDirectory, DestRootDirectory, ver);
                 serverTableJSMigrator.Migrate();
             }
-
+            string endMsg = "迁移完成，请仔细核对结果。";
+            MessageBox.Show(endMsg);
+            ErrorLogger.LogError(endMsg);
+            IsAvailable = true;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
