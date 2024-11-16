@@ -1,20 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.Eventing.Reader;
-using System.Globalization;
+﻿using Newtonsoft.Json.Linq;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Xml.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Drawing;
 
 namespace H5MotaUpdate.ViewModels
 {
@@ -158,7 +143,7 @@ namespace H5MotaUpdate.ViewModels
                 foreach (string filePath in files)
                 {
                     string fileName = Path.GetFileName(filePath);
-                    if (fileName == "icons.png" && version<new Version(2,5,4)) //检查icons长度
+                    if (fileName == "icons.png" && version < new Version(2, 5, 4)) //检查icons长度
                     {
                         using (Bitmap image = new Bitmap(filePath))
                         {

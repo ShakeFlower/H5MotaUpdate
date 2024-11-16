@@ -1,20 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.Eventing.Reader;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Xml.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Drawing;
+﻿using System.IO;
 
 namespace H5MotaUpdate.ViewModels
 {
@@ -150,6 +134,14 @@ namespace H5MotaUpdate.ViewModels
             {
                 MessageBox.Show("迁移" + fileName + $"文件出现错误：{e.Message}", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+        }
+
+        /// <summary>
+        /// 打开readme文件
+        /// </summary>
+        public static void ShowHelp()
+        {
+
         }
     }
 }

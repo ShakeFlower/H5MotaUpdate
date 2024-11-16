@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics.Eventing.Reader;
-using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Input;
-using System.Xml.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace H5MotaUpdate.ViewModels
 {
@@ -66,18 +55,29 @@ namespace H5MotaUpdate.ViewModels
             }
         }
 
+        public ObservableCollection<ColoredString> ErrorMessages => ErrorLogger.ErrorMessages;
+
         public ICommand SelectSourceCommand { get; set; }
         public ICommand SelectDestCommand { get; set; }
         public ICommand MigrateCommand { get; set; }
+        public ICommand HelpCommand { get; set; }
 
         public MainViewModel()
         {
+            ErrorLogger.LogError("111", "red");
+            ErrorLogger.LogError("222", "");
+            ErrorLogger.LogError("222", "");
+            ErrorLogger.LogError("222", "");
+            ErrorLogger.LogError("222", "");
+            ErrorLogger.LogError("222", "");
+            ErrorLogger.LogError("222", "");
             SourceRootDirectory = "请选择包含要翻新的旧塔的文件夹";
             DestRootDirectory = "请选择一个包含新的2.10.3样板的文件夹";
             VersionString = "-";
             SelectSourceCommand = new RelayCommand(SelectSourceRootFolder);
             SelectDestCommand = new RelayCommand(SelectDestRootFolder);
             MigrateCommand = new RelayCommand(StartMigrate);
+            HelpCommand = new RelayCommand(FileUtils.ShowHelp);
             MigrateServerTable = false;
         }
 

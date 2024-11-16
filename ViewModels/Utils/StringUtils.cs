@@ -1,14 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Windows;
-using System.Windows.Forms;
 
 namespace H5MotaUpdate.ViewModels
 {
@@ -208,8 +200,9 @@ namespace H5MotaUpdate.ViewModels
         /// 将塔的地图尺寸写入libs/core.js
         /// <summary>
         public static void WriteMapWidth(string destFilePath, int width, int height)
-        {            
-            try {
+        {
+            try
+            {
 
                 string tempFilePath = destFilePath + ".tmp";
                 string fileContent = File.ReadAllText(destFilePath);
@@ -219,8 +212,9 @@ namespace H5MotaUpdate.ViewModels
                 File.Delete(destFilePath);
                 File.Move(tempFilePath, destFilePath);
             }
-            catch { 
-       
+            catch
+            {
+
             }
         }
     }

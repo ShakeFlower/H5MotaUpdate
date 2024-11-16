@@ -1,25 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.Eventing.Reader;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media.Effects;
-using System.Windows.Shapes;
-using System.Xml.Linq;
-using Microsoft.VisualBasic.Devices;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-
-namespace H5MotaUpdate.ViewModels
+﻿namespace H5MotaUpdate.ViewModels
 {
     internal class ServerTableMigrator
     {

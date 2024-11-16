@@ -22,7 +22,14 @@
         <Button Name ="BrowseSourceFolderButton" FontSize ="16" Content="浏览" Canvas.Left="680" Canvas.Top="10" Width="40" Command="{Binding SelectSourceCommand}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         <Button x:Name ="BrowseDestFolderButton" FontSize ="16" Content="浏览" Canvas.Left="680" Canvas.Top="47" Width="40" Command="{Binding SelectDestCommand}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Button FontSize ="16" Content="开始迁移" Canvas.Left="30" Canvas.Top="127" Width="140" Command="{Binding MigrateCommand}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBlock FontSize ="16" Canvas.Left="50" Canvas.Top="220" Width="700" TextWrapping="Wrap" Text="本工具用于辅助迁移塔的地图、元件等数据，不保证结果的正确性，请仔细手动核对结果，并注意备份原工程。&#x000A;本工具不能迁移公共事件，插件和脚本，建议您手动逐个迁移。 &#x000A;同理，道具，敌人，地图等地方的事件和脚本很可能无法使用，请仔细核对。 &#x000A;部分事件块迁移后不能被新编辑器识别，会显示为自定义事件(如AddValue等)，但不一定失效，请根据具体情况决定是否改写。&#x000A;使用本工具复刻产生少量错误属于正常现象，自行修正即可，有严重bug（不能打开编辑器等）请根据控制台报错修正相应文件格式，或联系工具作者。"/>
-        <CheckBox Name ="MigrateConfig" Content="迁移配置表格" Height="26" Canvas.Left="200" Canvas.Top="130" Width="100" IsChecked="{Binding MigrateServerTable}"/>
+        <CheckBox Name ="MigrateConfig" Content="迁移配置表格" Height="26" Canvas.Left="426" Canvas.Top="134" Width="100" IsChecked="{Binding MigrateServerTable}"/>
+        <Button FontSize ="16" Content="查看帮助" Canvas.Left="223" Canvas.Top="127" Width="140" Command="{Binding MigrateCommand}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <ListBox Height="90" Canvas.Left="30" Canvas.Top="230" Width="690" ItemsSource="{Binding ErrorMessages}" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Canvas>
 </Window>
