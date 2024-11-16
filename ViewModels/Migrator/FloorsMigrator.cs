@@ -27,17 +27,18 @@ namespace H5MotaUpdate.ViewModels
         Version version;
         readonly string FILENAME = "floors";
         string?[] mapsIndexArray;
-        int mapWidth = 13;
+        int mapWidth, mapHeight;
 
         /// <summary>
         /// 请输入新旧Project文件夹的路径
         /// </summary>
-        public FloorsMigrator(string oldProjectDirectory, string newProjectDirectory, Version ver, int width)
+        public FloorsMigrator(string oldProjectDirectory, string newProjectDirectory, Version ver, int width, int height)
         {
             sourcePath = System.IO.Path.Combine(oldProjectDirectory, FILENAME);
             destPath = System.IO.Path.Combine(newProjectDirectory, FILENAME);
             this.version = ver;
             this.mapWidth = width;
+            this.mapHeight = height;
         }
 
         public void Migrate(string?[] mapsIndexArray)
@@ -104,9 +105,19 @@ namespace H5MotaUpdate.ViewModels
             jsonObject["canFlyFrom"] = jsonObject["canFlyTo"];
             jsonObject["ratio"] = jsonObject["item_ratio"];
             jsonObject.Remove("item_ratio");
-            jsonObject["width"] = mapWidth;
-            jsonObject["height"] = mapWidth;
             jsonObject["autoEvent"] = new JObject();
+
+            // 设置每张地图的尺寸。如果自己有就用自己的，否则设为默认长宽。
+            JToken width = jsonObject["width"],
+                height = jsonObject["height"];
+            if (width == null)
+            {
+                jsonObject["width"] = mapWidth;
+            }
+            if (height == null)
+            {
+                jsonObject["height"] = mapHeight;
+            }
 
             #region
             // 楼层贴图：老版本为一字符串或数组，字符串会被自动转为[0,0,str]

@@ -131,14 +131,26 @@ namespace H5MotaUpdate.ViewModels
             if (!CheckValid()) return;
             Version ver;
             Version.TryParse(VersionString, out ver);
-            int width = StringUtils.ReadMapWidth(Path.Combine(SourceRootDirectory, "libs/core.js"));
+
+            #region
+            // 从libs/core.js中读取塔的默认长宽，若不为13，需要写入新样板的core.js中
+            int width, height;
+            string sourceCoreJSPath = Path.Combine(SourceRootDirectory, "libs/core.js"),
+                destCoreJSPath = Path.Combine(DestRootDirectory, "libs/core.js");
+            (width, height) = StringUtils.ReadMapWidth(sourceCoreJSPath);
+
+            if (width != 13 || height != 13)
+            {
+                StringUtils.WriteMapWidth(destCoreJSPath, width, height);
+            }
+            #endregion
 
             DataJSMigrator dataJSMigrator = new(SourceProjectDirectory, DestProjectDirectroy, ver);
             EnemysJSMigrator enemysJSMigrator = new(SourceProjectDirectory, DestProjectDirectroy, ver);
             IconsJSMigrator iconsJSMigrator = new(SourceProjectDirectory, DestProjectDirectroy, ver);
             ItemsJSMigrator itemsJSMigrator = new(SourceProjectDirectory, DestProjectDirectroy, ver);
             MapsJSMigrator mapsJSMigrator = new(SourceProjectDirectory, DestProjectDirectroy, ver);
-            FloorsMigrator floorsMigrator = new(SourceProjectDirectory, DestProjectDirectroy, ver, width);
+            FloorsMigrator floorsMigrator = new(SourceProjectDirectory, DestProjectDirectroy, ver, width, height);
             MediaSourceMigrator mediaSourceJSMigrator = new(SourceProjectDirectory, DestProjectDirectroy, ver);
 
             dataJSMigrator.Migrate();

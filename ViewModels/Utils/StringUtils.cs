@@ -144,31 +144,84 @@ namespace H5MotaUpdate.ViewModels
         /// <summary>
         /// 读取塔的地图尺寸，默认值为13
         /// <summary>
-        public static int ReadMapWidth(string filePath)
+        public static (int, int) ReadMapWidth(string filePath)
         {
-            int width;
+            /*
+             * 直到2.9为止，地图默认尺寸在libs/core.js中 this.__SIZE__ = 13 
+             * 老版本写法如下：this.bigmap = {
+             * width: 13, // map width and height
+             * height: 13,
+             * }
+             */
+            int width, height;
             try
             {
                 string fileContent = File.ReadAllText(filePath);
 
-                string widthPattern = @"this\._WIDTH_\s*=\s*(\d+);";
+                // gpt写的，我也看不懂，就当它们是对的，有错再说
+                string widthPattern = @"this\._WIDTH_\s*=\s*(\d+);",
+                    heightPattern = @"this\._HEIGHT_\s*=\s*(\d+);",
+                    sizePattern = @"this\.__SIZE__\s*=\s*(\d+);",
+                    oldSizePattern = @"this\.bigmap\s*=\s*\{[^}]*width:\s*(\d+)[^}]*height:\s*(\d+)[^}]*\}";
 
-                Match widthMatch = Regex.Match(fileContent, widthPattern);
-
-                if (widthMatch.Success)
+                Match widthMatch = Regex.Match(fileContent, widthPattern),
+                    heightMatch = Regex.Match(fileContent, heightPattern);
+                if (widthMatch.Success && heightMatch.Success)
                 {
                     width = int.Parse(widthMatch.Groups[1].Value);
+                    height = int.Parse(heightMatch.Groups[1].Value);
                 }
                 else
                 {
-                    width = 13;
+                    Match sizeMatch = Regex.Match(fileContent, sizePattern);
+                    if (sizeMatch.Success)
+                    {
+                        width = int.Parse(sizeMatch.Groups[1].Value);
+                        height = width;
+                    }
+                    else
+                    {
+                        Match oldWidthMatch = Regex.Match(fileContent, oldSizePattern);
+                        if (oldWidthMatch.Success)
+                        {
+                            width = int.Parse(oldWidthMatch.Groups[1].Value);
+                            height = int.Parse(oldWidthMatch.Groups[2].Value);
+                        }
+                        else
+                        {
+                            width = 13;
+                            height = 13;
+                        }
+                    }
                 }
             }
             catch
             {
                 width = 13;
+                height = 13;
             }
-            return width;
+            return (width, height);
+        }
+
+
+        /// <summary>
+        /// 将塔的地图尺寸写入libs/core.js
+        /// <summary>
+        public static void WriteMapWidth(string destFilePath, int width, int height)
+        {            
+            try {
+
+                string tempFilePath = destFilePath + ".tmp";
+                string fileContent = File.ReadAllText(destFilePath);
+                fileContent = Regex.Replace(fileContent, @"this\._WIDTH_\s*=\s*\d+;", $"this._WIDTH_ = {width};");
+                fileContent = Regex.Replace(fileContent, @"this\._HEIGHT_\s*=\s*\d+;", $"this._HEIGHT_ = {height};");
+                File.WriteAllText(tempFilePath, fileContent);
+                File.Delete(destFilePath);
+                File.Move(tempFilePath, destFilePath);
+            }
+            catch { 
+       
+            }
         }
     }
 }
