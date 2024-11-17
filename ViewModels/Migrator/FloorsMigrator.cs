@@ -17,8 +17,8 @@ namespace H5MotaUpdate.ViewModels
         /// </summary>
         public FloorsMigrator(string oldProjectDirectory, string newProjectDirectory, Version ver, int width, int height)
         {
-            sourcePath = System.IO.Path.Combine(oldProjectDirectory, FILENAME);
-            destPath = System.IO.Path.Combine(newProjectDirectory, FILENAME);
+            sourcePath = Path.Combine(oldProjectDirectory, FILENAME);
+            destPath = Path.Combine(newProjectDirectory, FILENAME);
             this.version = ver;
             this.mapWidth = width;
             this.mapHeight = height;
@@ -91,18 +91,31 @@ namespace H5MotaUpdate.ViewModels
             jsonObject["autoEvent"] = new JObject();
 
             // 设置每张地图的尺寸。如果自己有就用自己的，否则设为默认长宽。
-            JToken width = jsonObject["width"],
-                height = jsonObject["height"];
-            if (width == null)
+
+            int width, height;
+
+            if (jsonObject["width"] != null && jsonObject["width"].Type == JTokenType.Integer)
             {
-                jsonObject["width"] = mapWidth;
+                width = (int)jsonObject["width"];
             }
-            if (height == null)
+            else
             {
-                jsonObject["height"] = mapHeight;
+                width = mapWidth;
+                jsonObject["width"] = width;
             }
 
-            #region
+            if (jsonObject["height"] != null && jsonObject["height"].Type == JTokenType.Integer)
+            {
+                height = (int)jsonObject["height"];
+            }
+            else
+            {
+                height = mapHeight;
+                jsonObject["height"] = height;
+            }
+
+
+            #region 楼层贴图
             // 楼层贴图：老版本为一字符串或数组，字符串会被自动转为[0,0,str]
             // 其中t[0],t[1]分别为x,y,t[2]为贴图名字 剩下的不知道干嘛的
             JToken oldImages = jsonObject["images"];
@@ -126,15 +139,15 @@ namespace H5MotaUpdate.ViewModels
                 new JProperty("canvas", "bg"),
                 new JProperty("sx", 0),
                 new JProperty("sy", 0),
-                new JProperty("w", 416),
-                new JProperty("h", 416)
+                new JProperty("w", 32 * width),
+                new JProperty("h", 32 * height)
                 );
             jsonObject["images"] = new JArray(newImages);
             #endregion
 
             #region
             JArray mapMatrix = (JArray)jsonObject["map"];
-            JArray zeroBgMatrix = StringUtils.CreateMatrix(mapWidth, mapWidth);
+            JArray zeroBgMatrix = StringUtils.CreateMatrix(width, height);
             for (int i = 0; i < mapMatrix.Count; i++)
             {
                 JArray lineArr = (JArray)mapMatrix[i];
