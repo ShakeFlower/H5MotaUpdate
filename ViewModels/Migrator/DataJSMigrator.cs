@@ -33,7 +33,7 @@ namespace H5MotaUpdate.ViewModels
                         Convert(jsonObject);
                     }
                     StringBuilder newJsContent = new StringBuilder();
-                    newJsContent.Append("var " + DATANAME + " = ");
+                    newJsContent.Append("var " + DATANAME + " = \n"); // 大括号在第二行
                     newJsContent.Append(jsonObject.ToString());
                     File.WriteAllText(destPath, newJsContent.ToString());
                 }
