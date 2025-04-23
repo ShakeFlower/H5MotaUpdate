@@ -73,7 +73,7 @@ namespace H5MotaUpdate.ViewModels
                     Convert(jsonObject);
                 }
                 StringBuilder newJsContent = new StringBuilder();
-                newJsContent.Append("main.floors." + floorName + " = ");
+                newJsContent.Append("main.floors." + floorName + " = \n");
                 newJsContent.Append(jsonObject.ToString());
                 File.WriteAllText(destFilePath, newJsContent.ToString());
             }

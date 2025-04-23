@@ -36,7 +36,7 @@ namespace H5MotaUpdate.ViewModels
                         Convert(ref jsonObject);
                     }
                     StringBuilder newJsContent = new StringBuilder();
-                    newJsContent.Append("var " + DATANAME + " = ");
+                    newJsContent.Append("var " + DATANAME + " = \n");
                     newJsContent.Append(jsonObject.ToString());
                     File.WriteAllText(destPath, newJsContent.ToString());
                 }

@@ -43,7 +43,7 @@ namespace H5MotaUpdate.ViewModels
                     JObject jsonObject = StringUtils.getValidJson(sourcePath);
                     Convert(jsonObject);
                     StringBuilder newJsContent = new StringBuilder();
-                    newJsContent.Append("var " + DATANAME + " = ");
+                    newJsContent.Append("var " + DATANAME + " = \n");
                     newJsContent.Append(jsonObject.ToString());
                     File.WriteAllText(destPath, newJsContent.ToString());
                 }
