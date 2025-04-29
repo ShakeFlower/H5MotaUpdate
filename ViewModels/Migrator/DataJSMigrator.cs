@@ -152,7 +152,7 @@ namespace H5MotaUpdate.ViewModels
             }
             if (heroData["equipment"] == null)
             {
-                heroData["equipment"] = new JArray(); // 预防某些超级老样板没有hero.equipment}
+                heroData["equipment"] = new JArray(); // 预防某些超级老样板没有hero.equipment
             }
             heroData.Remove("experience");
 
