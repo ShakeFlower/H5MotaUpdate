@@ -6,7 +6,6 @@ using System.Windows.Input;
 
 namespace H5MotaUpdate.ViewModels
 {
-    //silverCoin->Wand
     class MainViewModel : INotifyPropertyChanged
     {
         private string? _sourceRootDirectory;
@@ -85,6 +84,9 @@ namespace H5MotaUpdate.ViewModels
             IsAvailable = true;
         }
 
+        /// <summary>
+        /// 选择要翻新的旧塔的文件夹，会自动读取旧塔的版本号
+        /// </summary>
         private void SelectSourceRootFolder()
         {
             using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
@@ -97,6 +99,9 @@ namespace H5MotaUpdate.ViewModels
             }
         }
 
+        /// <summary>
+        /// 选择新样板文件夹
+        /// </summary>
         public void SelectDestRootFolder()
         {
             using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())

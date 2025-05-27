@@ -143,19 +143,25 @@ namespace H5MotaUpdate.ViewModels
                 foreach (string filePath in files)
                 {
                     string fileName = Path.GetFileName(filePath);
-                    if (fileName == "icons.png" && version < new Version(2, 5, 4)) //检查icons长度
+                    // 由于屡次导致工程爆炸，icons.png就不复制了
+                    if (fileName == "icons.png")
                     {
-                        using (Bitmap image = new Bitmap(filePath))
-                        {
-                            int width = image.Width;
-                            int height = image.Height;
-                            if (height < 1120)
-                            {
-                                ErrorLogger.LogError("警告：原塔的icons.png长度不足！请对照最新样板使用PS工具补齐数字键和Alt图标等。", "red");
-                                MessageBox.Show("警告：原塔的icons.png长度不足！请对照最新样板使用PS工具补齐数字键和Alt图标等。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                            }
-                        }
+                        continue;
                     }
+
+                    //if (fileName == "icons.png" && version < new Version(2, 5, 4)) //检查icons长度
+                    //{
+                    //    using (Bitmap image = new Bitmap(filePath))
+                    //    {
+                    //        int width = image.Width;
+                    //        int height = image.Height;
+                    //        if (height < 1120)
+                    //        {
+                    //            ErrorLogger.LogError("警告：原塔的icons.png长度不足！请对照最新样板使用PS工具补齐数字键和Alt图标等。", "red");
+                    //            MessageBox.Show("警告：原塔的icons.png长度不足！请对照最新样板使用PS工具补齐数字键和Alt图标等。", "错误", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    //        }
+                    //    }
+                    //}
 
                     if (imagesList.Contains(fileName))
                     {

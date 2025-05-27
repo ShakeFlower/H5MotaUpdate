@@ -10,26 +10,75 @@
     <Window.DataContext>
         <vm:MainViewModel></vm:MainViewModel>
     </Window.DataContext>
-    <Canvas>
-        <TextBlock FontSize ="16" Height="20" Canvas.Left="10" Text="旧塔文件夹" Canvas.Top="15" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBlock FontSize ="16" Height="20" Canvas.Left="10" Text="新样板文件夹" Canvas.Top="50" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <TextBlock FontSize ="16" Height="20" Canvas.Left="10" Text="旧塔版本号" Canvas.Top="85" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="0,0,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,10,0,10" FontSize ="16"
+                   Text="旧塔文件夹" />
+            <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,10,0,10" FontSize ="14"
+                   Width="500" TextWrapping ="Wrap"
+                   Name ="InputFolderPath" Text="{Binding SourceRootDirectory}"/>
+            <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,10,0,10" Padding="5,2,5,2" FontSize ="16"
+                    Name ="BrowseSourceFolderButton" Content="浏览" Command="{Binding SelectSourceCommand}"/>
 
-        <TextBlock Name ="InputFolderPath" FontSize ="14" Height="40" Canvas.Left="140"  Canvas.Top="15" Width="500" TextWrapping ="Wrap" Text="{Binding SourceRootDirectory}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBlock Name ="OutputFolderPath" FontSize ="14" Height="40" Canvas.Left="140"  Canvas.Top="50" Width="500" TextWrapping ="Wrap" Text="{Binding DestRootDirectory}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <TextBlock FontSize ="16" Height="20" Canvas.Left="140" Text="{Binding VersionString}" Canvas.Top="85" Width="Auto" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,10,0,10"
+                   Text="新样板文件夹" FontSize ="16" />
+            <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,10,0,10" FontSize ="14" 
+                    Width="500" TextWrapping ="Wrap"  
+                    Name ="OutputFolderPath" Text="{Binding DestRootDirectory}" />
+            <Button Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,10,0,10" Padding="5,2,5,2" FontSize ="16"
+                    x:Name ="BrowseDestFolderButton" Content="浏览" Command="{Binding SelectDestCommand}"/>
 
-        <Button Name ="BrowseSourceFolderButton" FontSize ="16" Content="浏览" Canvas.Left="680" Canvas.Top="10" Width="40" Command="{Binding SelectSourceCommand}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <Button x:Name ="BrowseDestFolderButton" FontSize ="16" Content="浏览" Canvas.Left="680" Canvas.Top="47" Width="40" Command="{Binding SelectDestCommand}" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <Button FontSize ="16" Content="开始迁移" Canvas.Left="30" Canvas.Top="127" Width="140" Command="{Binding MigrateCommand}" IsEnabled= "{Binding IsAvailable}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-        <CheckBox Name ="MigrateConfig" Content="迁移配置表格" Height="26" Canvas.Left="426" Canvas.Top="134" Width="100" IsChecked="{Binding MigrateServerTable}"/>
-        <Button FontSize ="16" Content="查看帮助" Canvas.Left="223" Canvas.Top="127" Width="140" Command="{Binding HelpCommand}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <ListBox Height="90" Canvas.Left="30" Canvas.Top="230" Width="690" ItemsSource="{Binding ErrorMessages}" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <TextBlock  Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,10,0,10"
+                   Text="旧塔版本号" FontSize ="16"/>
+            <Grid Grid.Row="2" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40,10,40,10" FontSize ="16" 
+                       Text="{Binding VersionString}" Width="Auto" />
+                <TextBox Grid.Row="2" Grid.Column="1" Width="80" Height="25" Margin="40,10,10,10" FontSize ="16"
+                       Text="{Binding VersionString, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="0,0,0,30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="50,10,0,10" Padding="10,5,10,5" FontSize ="16" 
+                Content="开始迁移" Command="{Binding MigrateCommand}" IsEnabled= "{Binding IsAvailable}" />
+            <Button Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="50,10,0,10" Padding="10,5,10,5" FontSize ="16"
+                Content="查看帮助" Command="{Binding HelpCommand}"/>
+            <CheckBox  Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="50,10,0,10" FontSize ="14"
+                Name ="MigrateConfig" Content="迁移配置表格" IsChecked="{Binding MigrateServerTable}"/>
+        </Grid>
+
+        <ListBox Grid.Row="2" Width="700" Height ="140" ItemsSource="{Binding ErrorMessages}" HorizontalAlignment="Center" VerticalAlignment="Center">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" TextWrapping="Wrap"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-    </Canvas>
+    </Grid>
+    
 </Window>
