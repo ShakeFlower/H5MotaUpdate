@@ -50,7 +50,7 @@ namespace H5MotaUpdate.ViewModels
                 // 获取匹配的内容，去掉 ${ 和 }  
                 string content = match.Groups[1].Value;
                 // 在匹配的内容中替换 oldWord 为 newWord  
-                string modifiedContent = content.Replace(oldWord, newWord);
+                string modifiedContent = "(" + content.Replace(oldWord, newWord) + ")";
                 // 返回替换后的完整匹配字符串，包含 ${ 和 }  
                 return "${" + modifiedContent + "}";
             });

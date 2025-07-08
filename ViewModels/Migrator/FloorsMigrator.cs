@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using H5MotaUpdate.ViewModels.Utils;
+using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Text;
 
@@ -92,6 +93,12 @@ namespace H5MotaUpdate.ViewModels
 
             // 设置每张地图的尺寸。如果自己有就用自己的，否则设为默认长宽。
 
+            foreach (JProperty posEvent in jsonObject["events"])
+            {
+                JToken posEventValue = posEvent.Value;
+                MotaEventParser.parseMotaEvent(posEventValue);
+            }
+
             int width, height;
 
             if (jsonObject["width"] != null && jsonObject["width"].Type == JTokenType.Integer)
@@ -145,7 +152,7 @@ namespace H5MotaUpdate.ViewModels
             jsonObject["images"] = new JArray(newImages);
             #endregion
 
-            #region
+            #region 滑冰转移到背景层
             JArray mapMatrix = (JArray)jsonObject["map"];
             JArray zeroBgMatrix = StringUtils.CreateMatrix(width, height);
             for (int i = 0; i < mapMatrix.Count; i++)

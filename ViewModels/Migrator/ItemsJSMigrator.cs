@@ -89,10 +89,36 @@ namespace H5MotaUpdate.ViewModels
             {
                 string key = prop.Name;
                 JObject perData = (JObject)prop.Value;
-                if (perData["cls"].ToString() == "keys")
+
+                if (perData["cls"]?.ToString() == "keys")
                 {
                     perData["cls"] = "tools";
                     perData["hideInToolbox"] = true;
+                }
+
+                if (perData["cls"]?.ToString() == "equips")
+                {
+                    JObject equipValue = (JObject)perData["equip"];
+
+                    if (equipValue != null)
+                    {
+                        JObject valueObj = new JObject();
+
+                        // 装备属性的名字
+                        string[] keysToMove = { "atk", "def", "mdef", "hp" };
+
+                        foreach (string keyToMove in keysToMove)
+                        {
+                            if (equipValue.ContainsKey(keyToMove))
+                            {
+                                JToken val = equipValue[keyToMove];
+                                valueObj[keyToMove] = val;
+                                equipValue.Remove(keyToMove);
+                            }
+                        }
+                        equipValue["value"] = valueObj;
+                        perData["equip"] = equipValue;
+                    }
                 }
             }
             if (newItemDatas.ContainsKey("snow"))

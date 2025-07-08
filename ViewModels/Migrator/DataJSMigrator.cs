@@ -192,7 +192,9 @@ namespace H5MotaUpdate.ViewModels
                         shopId = shop["id"].ToString(),
                         flagName_Time = "flag:" + shopId + "_times"; // 新设的购买次数变量flag:xxx
                     string priceStr = shopNeed.Replace("times", flagName_Time); //商店价格字符串，用新变量名取代times
+
                     shop["text"] = StringUtils.ReplaceInBetweenCurlyBraces(shopText, "times", flagName_Time);
+                    shop["text"] = StringUtils.ReplaceInBetweenCurlyBraces(shopText, "need", priceStr);
                     shop["disablePreview"] = false;
 
                     if (use == "experience")
