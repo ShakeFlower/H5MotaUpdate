@@ -91,10 +91,17 @@ namespace H5MotaUpdate.ViewModels
         {
             using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
             {
+                // 设置初始路径为上一次选择的路径
+                folderBrowserDialog.SelectedPath = Properties.Settings.Default.LastSourceFolderPath;
+
                 if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     SourceRootDirectory = folderBrowserDialog.SelectedPath;
+                    // 保存本次选择的路径
+                    Properties.Settings.Default.LastSourceFolderPath = SourceRootDirectory;
+                    Properties.Settings.Default.Save();
                 }
+
                 VersionString = VersionUtils.GetVersion(SourceRootDirectory);
             }
         }
@@ -106,9 +113,15 @@ namespace H5MotaUpdate.ViewModels
         {
             using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
             {
+                // 设置初始路径为上一次选择的路径
+                folderBrowserDialog.SelectedPath = Properties.Settings.Default.LastDestFolderPath;
+
                 if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     DestRootDirectory = folderBrowserDialog.SelectedPath;
+                    // 保存本次选择的路径
+                    Properties.Settings.Default.LastDestFolderPath = DestRootDirectory;
+                    Properties.Settings.Default.Save();
                 }
             }
         }
