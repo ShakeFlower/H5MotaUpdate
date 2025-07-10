@@ -116,7 +116,11 @@ namespace H5MotaUpdate.ViewModels
                                 equipValue.Remove(keyToMove);
                             }
                         }
-                        equipValue["value"] = valueObj;
+                        if (equipValue.ContainsKey("percentage") && equipValue["percentage"].Type == JTokenType.Boolean && (bool)equipValue["percentage"])
+                        {
+                            equipValue["percentage"] = valueObj;
+                        }
+                        else equipValue["value"] = valueObj;
                         perData["equip"] = equipValue;
                     }
                 }
