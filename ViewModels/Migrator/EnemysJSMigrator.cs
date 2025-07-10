@@ -120,6 +120,14 @@ namespace H5MotaUpdate.ViewModels
                         enemy["breakArmor"] = enemy["defValue"];
                         enemy.Remove("defValue");
                         break;
+                    case 9: //净化
+                        enemy["purify"] = enemy["n"];
+                        enemy.Remove("purify");
+                        break;
+                    case 11://吸血
+                        enemy["vampire"] = enemy["value"];
+                        enemy.Remove("value");
+                        break;
                     case 15://领域
                         enemy["zone"] = enemy["value"];
                         enemy.Remove("value");
@@ -136,6 +144,9 @@ namespace H5MotaUpdate.ViewModels
                         enemy["haloRange"] = enemy["range"];
                         enemy["haloSquare"] = enemy["zoneSquare"];
                         enemy["haloAdd"] = enemy["add"];
+                        enemy["hpBuff"] = enemy["value"];
+                        enemy["atkBuff"] = enemy["atkValue"];
+                        enemy["defBuff"] = enemy["defValue"];
                         enemy.Remove("range");
                         enemy.Remove("zoneSquare");
                         enemy.Remove("add");
@@ -170,6 +181,16 @@ namespace H5MotaUpdate.ViewModels
                 enemy["breakArmor"] = enemy["defValue"];
                 if (!foundSpecialValues.Contains(21)) enemy.Remove("defValue");
             }
+            if (foundSpecialValues.Contains(9))
+            {
+                enemy["purify"] = enemy["n"];
+                if (!foundSpecialValues.Contains(6)) enemy.Remove("purify");
+            }
+            if (foundSpecialValues.Contains(11))
+            {
+                enemy["vampire"] = enemy["value"];
+                if (!foundSpecialValues.Contains(21)) enemy.Remove("value");
+            }
             if (foundSpecialValues.Contains(15))
             {
                 enemy["zone"] = enemy["value"];
@@ -190,6 +211,9 @@ namespace H5MotaUpdate.ViewModels
                 enemy["haloRange"] = enemy["range"];
                 enemy["haloSquare"] = enemy["zoneSquare"];
                 enemy["haloAdd"] = enemy["add"];
+                enemy["hpBuff"] = enemy["value"];
+                enemy["atkBuff"] = enemy["atkValue"];
+                enemy["defBuff"] = enemy["defValue"];
                 if (!foundSpecialValues.Contains(11)) enemy.Remove("add");
                 if (!foundSpecialValues.Contains(15))
                 {
